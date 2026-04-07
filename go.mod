@@ -4,8 +4,11 @@ go 1.25.0
 
 require (
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
+	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.1
 )
+
+require github.com/mattn/go-sqlite3 v1.14.22 // indirect
 
 require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
