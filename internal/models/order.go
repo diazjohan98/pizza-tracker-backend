@@ -8,7 +8,13 @@ import (
 )
 
 var (
-	OrderStatuses = []string{"Order Placed", "Preparing", "Baking", "Quality Check", "Ready"}
+	OrderStatuses = []string{
+		"Order Placed",
+		"Preparing",
+		"Baking",
+		"Quality Check",
+		"Ready",
+	}
 
 	PizzaTypes = []string{
 		"Margherita",
