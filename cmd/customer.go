@@ -9,7 +9,7 @@ import (
 )
 
 type customerData struct {
-	Ttitle   string
+	Title    string
 	Order    models.Order
 	Statuses []string
 }
@@ -83,7 +83,7 @@ func (h *Handler) serveCustomer(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "customer.tmpl", customerData{
-		Ttitle:   "Pizza Order Status " + orderID,
+		Title:    "Pizza Order Status " + orderID,
 		Order:    *order,
 		Statuses: models.OrderStatuses,
 	})
