@@ -18,7 +18,7 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 	admin := router.Group("/admin")
 	admin.Use(h.AuthMiddleware())
 	{
-		admin.GET("", h.ServeAdminDashboard)
+		admin.GET("", h.HandleAdminDashboard)
 	}
 
 	router.Static("/static", "./template/static")
