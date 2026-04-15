@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"os"
 
@@ -51,20 +52,22 @@ func loadTemplates(router *gin.Engine) error {
 }
 
 func setupSessionStore(db *gorm.DB, secretKey []byte) sessions.Store {
-	store := gormsessions.NewStore(db, true)
+	store := gormsessions.NewStore(db, true, secretKey)
 	store.Options(sessions.Options{
 		Path:     "/",
 		MaxAge:   86400,
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: 3,
+		SameSite: 2,
 	})
 	return store
 }
 
-func setSessionValue(c *gin.Context, key string, value interface{}) error {
+func setSessionValue(c *gin.Context, userID interface{}, username string) error {
 	session := sessions.Default(c)
-	session.Set(key, value)
+	// Convertimos el ID a texto de forma segura, sin importar si es número o string
+	session.Set("userID", fmt.Sprintf("%v", userID))
+	session.Set("username", username)
 	return session.Save()
 }
 

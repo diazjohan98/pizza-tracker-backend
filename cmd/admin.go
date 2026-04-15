@@ -37,8 +37,17 @@ func (h *Handler) HandleLoginPost(c *gin.Context) {
 		return
 	}
 
-	setSessionValue(c, "userID", user.ID)
-	setSessionValue(c, "username", user.Username)
+	// setSessionValue(c, "userID", fmt.Sprintf("%v", user.ID))
+	// setSessionValue(c, "username", user.Username)
+
+	errSession := setSessionValue(c, user.ID, user.Username)
+	if errSession != nil {
+		// Si SQLite falla, ahora lo veremos en rojo en la pantalla de Login
+		c.HTML(http.StatusOK, "login.tmpl", LoginData{
+			Error: "Error de base de datos al crear sesión: " + errSession.Error(),
+		})
+		return
+	}
 
 	c.Redirect(http.StatusSeeOther, "/admin")
 }
