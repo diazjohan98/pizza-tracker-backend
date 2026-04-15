@@ -61,10 +61,33 @@ func (h *Handler) HandleLogout(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/login")
 }
 
-func (h *Handler) HandleAdminDashboard(c *gin.Context) {
+func (h *Handler) ServerAdminDashboard(c *gin.Context) {
 	username := GetSessionString(c, "username")
 
 	c.HTML(http.StatusOK, "admin.tmpl", AdminDashboardData{
 		Username: username,
 	})
+}
+
+func (h *Handler) HandlerOrderPut(c *gin.Context) {
+	orderId := c.Param("id")
+	newStatus := c.PostForm("status")
+
+	if err := h.orders.UpdateOrderStatus(orderId, newStatus); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/admin")
+}
+
+func (h *Handler) HandlerOrderDelete(c *gin.Context) {
+	orderID := c.Param("id")
+
+	if err := h.orders.DeleteOrder(orderID); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/admin")
 }
