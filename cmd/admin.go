@@ -12,7 +12,7 @@ type LoginData struct {
 }
 
 type AdminDashboardData struct {
-	Order    []models.Order
+	Orders   []models.Order
 	Statuses []string
 	Username string
 }
@@ -73,7 +73,7 @@ func (h *Handler) ServerAdminDashboard(c *gin.Context) {
 	username := GetSessionString(c, "username")
 
 	c.HTML(http.StatusOK, "admin.tmpl", AdminDashboardData{
-		Order:    orders,
+		Orders:   orders,
 		Statuses: models.OrderStatuses,
 		Username: username,
 	})
