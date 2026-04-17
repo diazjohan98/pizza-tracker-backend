@@ -10,6 +10,7 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 	router.GET("/", h.ServeNewOrderForm)
 	router.POST("/new-order", h.HandleNewOrderPost)
 	router.GET("/customer/:id", h.serveCustomer)
+	router.GET("/notifications", h.notificationHandler)
 
 	router.GET("/login", h.HandleLoginGet)
 	router.POST("/login", h.HandleLoginPost)
@@ -21,6 +22,7 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 		admin.GET("", h.ServerAdminDashboard)
 		admin.POST("/order/:id/update", h.HandlerOrderPut)
 		admin.POST("/order/:id/delete", h.HandlerOrderDelete)
+		admin.GET("/notifications", h.adminNotificationHandler)
 	}
 
 	router.Static("/static", "./template/static")
