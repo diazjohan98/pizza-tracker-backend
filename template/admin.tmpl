@@ -32,6 +32,8 @@
                             ml-2 p-1.5 rounded-lg hover:bg-gray-100">
                             <span class="text-xl">🔃</span>
                         </button>
+                        <span id="lastFetched" class="text-sm text-gray-500 mt-4 font-medium"></span>
+                        <span id="newOrdersBadge" class="ml-2 text-xs font-semibold text-white bg-red-500 rounded-full px-3 py-1.5 hidden shadow-sm">0 new order</span>
                     </div>
                     <div class="w-full overflow-x-auto rounded-xl border border-gray-200">
                         <table class="w-full">
@@ -127,5 +129,27 @@
         </div>
     </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        
+        const updateTime = () => `Last updated on: ${new Date().toLocaleString()}`;
+        
+        const lastFetched = document.getElementById("lastFetched");
+        const newOrdersBadge = document.getElementById("newOrdersBadge");
+        
+        lastFetched.textContent = updateTime(); 
 
+        const eventSrc = new EventSource('/admin/notifications');
+
+        let newOrdersCount = 0;
+        eventSrc.onmessage = e => {
+            newOrdersCount++;
+            newOrdersBadge.textContent = `${newOrdersCount} new order${newOrdersCount === 1 ? '' : 's'}`;
+            newOrdersBadge.classList.remove("hidden");
+            lastFetched.textContent = updateTime();
+        };
+        
+        eventSrc.onerror = err => console.error("EventSource admin failed:", err);
+    });
+    </script>
     {{template "bottom" .}}
