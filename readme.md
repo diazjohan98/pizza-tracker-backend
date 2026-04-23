@@ -63,6 +63,9 @@ El proyecto sigue una estructura limpia y modularizada:
  ┃ ┣ 📜 login.tmpl         # Interfaz de acceso
  ┃ ┗ 📂 static             # Assets estáticos (imágenes)
  ┗ 📂 data                 # Almacenamiento de SQLite (auto-generado)
+
+```
+
 ⚙️ Instalación y Ejecución
 Prerrequisitos
 Go 1.20+ instalado en tu sistema.
@@ -70,26 +73,38 @@ Go 1.20+ instalado en tu sistema.
 Git.
 
 Pasos para iniciar el servidor local
-Clonar el repositorio:
 
+1. Clonar el repositorio:
+
+```
 Bash
-git clone [https://github.com/tu-usuario/pizza-tracker-backend.git](https://github.com/tu-usuario/pizza-tracker-backend.git)
+git clone [https://github.com/diazjohan98/pizza-tracker-backend.git)
 cd pizza-tracker-backend
-Instalar dependencias:
+```
 
+2. Instalar dependencias:
+
+```
 Bash
 go mod tidy
-Ejecutar el proyecto:
+```
 
+3. Ejecutar el proyecto:
+
+```
 Bash
 go run ./cmd
-Acceder a la aplicación:
+```
 
-Crear una orden de prueba (Cliente): http://localhost:8080/
+4. Acceder a la aplicación:
 
-Acceder al panel de control (Admin): http://localhost:8080/login
+-Crear una orden de prueba (Cliente): http://localhost:8080/
+
+-Acceder al panel de control (Admin): http://localhost:8080/login
 
 👨‍💻 Autor
+
+```
 Johan Sebastian Vasquez Diaz
 
 Software Developer| Frontend explorando el mundo Full-Stack con Go.
