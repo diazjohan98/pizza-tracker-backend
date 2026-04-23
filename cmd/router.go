@@ -26,4 +26,18 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 	}
 
 	router.Static("/static", "./template/static")
+
+	//* ---------------------------------
+	//* FUNCIONES PARA LA API REACT
+	//*----------------------------------
+
+	api := router.Group("/api")
+	{
+		api.GET("/form-data", h.ApiGetOrderFormData)
+
+		api.POST("/orders", h.ApiHandleNewOrderPost)
+
+		api.GET("/orders/:id", h.ApiServeCustomer)
+	}
+
 }

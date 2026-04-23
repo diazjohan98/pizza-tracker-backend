@@ -90,3 +90,72 @@ func (h *Handler) serveCustomer(c *gin.Context) {
 		Statuses: models.OrderStatuses,
 	})
 }
+
+//* ---------------------------------
+//* FUNCIONES PARA LA API REACT
+//*----------------------------------
+
+func (h *Handler) ApiGetOrderFormData(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"pizzaTypes": models.PizzaTypes,
+		"pizzaSizes": models.PizzaSizes,
+	})
+}
+
+func (h *Handler) ApiHandleNewOrderPost(c *gin.Context) {
+	var form OrderRequest
+	if err := c.ShouldBindJSON(&form); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	orderItems := make([]models.OrderItem, len(form.Size))
+	for i := range orderItems {
+		orderItems[i] = models.OrderItem{
+			Size:         form.Size[i],
+			Pizza:        form.PizzaTypes[i],
+			Instructions: form.Instructions[i],
+		}
+	}
+
+	order := models.Order{
+		CustomerName: form.Name,
+		Phone:        form.Phone,
+		Address:      form.Address,
+		Status:       models.OrderStatuses[0],
+		Items:        orderItems,
+	}
+
+	if err := h.orders.CreateOrder(&order); err != nil {
+		slog.Error("Failed to create order", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No pudimos crear la orden"})
+	}
+
+	slog.Info("Order created via API", "orderrId", order.ID, "customer", order.CustomerName)
+
+	h.notificationManager.Notify("admin:new_orders", "new_order")
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ORden creada exitosamente",
+		"orderId": order.ID,
+	})
+}
+
+func (h *Handler) ApiServeCustomer(c *gin.Context) {
+	orderID := c.Param("id")
+	if orderID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Order ID is required"})
+		return
+	}
+
+	order, err := h.orders.GetOrder(orderID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Order not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"order":    order,
+		"statuses": models.OrderStatuses,
+	})
+}
