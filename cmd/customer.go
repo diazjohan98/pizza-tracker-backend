@@ -19,12 +19,12 @@ type OrderFormData struct {
 }
 
 type OrderRequest struct {
-	Name         string   `form:"name" binding:"required,min=2,max=100"`
-	Phone        string   `form:"phone" binding:"required,min=10,max=20"`
-	Address      string   `form:"address" binding:"required,min=5,max=200"`
-	Size         []string `form:"size" binding:"required,min=1,dive,valid_pizza_size"`
-	PizzaTypes   []string `form:"pizza_types" binding:"required,min=1,dive,valid_pizza_type"`
-	Instructions []string `form:"instructions" binding:"max=200"`
+	Name         string   `form:"name" json:"name" binding:"required,min=2,max=100"`
+	Phone        string   `form:"phone" json:"phone" binding:"required,min=10,max=20"`
+	Address      string   `form:"address" json:"address" binding:"required,min=5,max=200"`
+	Size         []string `form:"size" json:"size" binding:"required,min=1,dive,valid_pizza_size"`
+	PizzaTypes   []string `form:"pizza_types" json:"pizza_types" binding:"required,min=1,dive,valid_pizza_type"`
+	Instructions []string `form:"instructions" json:"instructions" binding:"max=200"`
 }
 
 func (h *Handler) ServeNewOrderForm(c *gin.Context) {
