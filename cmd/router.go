@@ -34,10 +34,18 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 	api := router.Group("/api")
 	{
 		api.GET("/form-data", h.ApiGetOrderFormData)
-
 		api.POST("/orders", h.ApiHandleNewOrderPost)
-
 		api.GET("/orders/:id", h.ApiServeCustomer)
+
+		api.POST("/login", h.ApiHandleLoginPost)
+		api.POST("/logout", h.ApiHandleLogout)
+	}
+
+	apiAdmin := router.Group("/api/admin")
+	apiAdmin.Use(h.AuthMiddleware()) // Reutilizamos tu middleware de seguridad
+	{
+		// React pedirá los datos aquí para pintar el panel
+		apiAdmin.GET("/dashboard", h.ApiServerAdminDashboard)
 	}
 
 }
