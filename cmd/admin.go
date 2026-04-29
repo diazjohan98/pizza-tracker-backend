@@ -103,3 +103,55 @@ func (h *Handler) HandlerOrderDelete(c *gin.Context) {
 
 	c.Redirect(http.StatusSeeOther, "/admin")
 }
+
+//* ---------------------------------
+//* FUNCIONES PARA LA API REACT
+//*----------------------------------
+
+func (h *Handler) ApiHandleLoginPost(c *gin.Context) {
+	var form struct {
+		Username string `json:"username" binding:"required,min=3,max=50"`
+		Password string `json:"password" binding:"required,min=6"`
+	}
+
+	if err := c.ShouldBindJSON(&form); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Datos inválidos: Verifica los campos"})
+	}
+
+	user, err := h.users.AuthenticateUser(form.Username, form.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Credenciales inválidas"})
+		return
+	}
+
+	errSession := setSessionValue(c, user.ID, user.Username)
+	if errSession != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error de base de datos al crear sesión: " + errSession.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login exitoso", "username": user.Username})
+}
+
+func (h *Handler) ApiHandleLogout(c *gin.Context) {
+	if err := ClearSession(c); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al cerrar sesión: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Sesión cerrada exitosamente"})
+}
+
+func (h *Handler) ApiServerAdminDashboard(c *gin.Context) {
+	orders, err := h.orders.GetAllOrders()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al cargar las órdenes"})
+		return
+	}
+	username := GetSessionString(c, "username")
+
+	c.JSON(http.StatusOK, gin.H{
+		"orders":   orders,
+		"statuses": models.OrderStatuses,
+		"username": username,
+	})
+}
