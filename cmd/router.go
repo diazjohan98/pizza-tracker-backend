@@ -46,6 +46,8 @@ func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
 	{
 		// React pedirá los datos aquí para pintar el panel
 		apiAdmin.GET("/dashboard", h.ApiServerAdminDashboard)
+		apiAdmin.PUT("/orders/:id", h.ApiHandlerOrderPut)
+		apiAdmin.DELETE("/orders/:id", h.ApiHandlerOrderDelete)
 	}
 
 }
