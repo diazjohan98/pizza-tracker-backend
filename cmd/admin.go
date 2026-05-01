@@ -155,3 +155,28 @@ func (h *Handler) ApiServerAdminDashboard(c *gin.Context) {
 		"username": username,
 	})
 }
+
+func (h *Handler) ApiHandlerOrderPut(c *gin.Context) {
+	orderId := c.Param("id")
+	newStatus := c.PostForm("status")
+
+	if err := h.orders.UpdateOrderStatus(orderId, newStatus); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	h.notificationManager.Notify("order:"+orderId, "order_updated")
+
+	c.JSON(http.StatusOK, gin.H{"message": "Estado actualizado correctamente"})
+}
+
+func (h *Handler) ApiHandlerOrderDelete(c *gin.Context) {
+	orderID := c.Param("id")
+
+	if err := h.orders.DeleteOrder(orderID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo eliminar la orden"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Orden eliminada exitosamente"})
+}
