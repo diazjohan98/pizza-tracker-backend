@@ -116,6 +116,7 @@ func (h *Handler) ApiHandleLoginPost(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&form); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Datos inválidos: Verifica los campos"})
+		return
 	}
 
 	user, err := h.users.AuthenticateUser(form.Username, form.Password)

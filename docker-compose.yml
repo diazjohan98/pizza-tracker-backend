@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./Pizza-shop-order-backend
+    container_name: pizza_backend
+    ports:
+      - "8080:8080"
+    volumes:
+      # Conexión directa a tu base de datos local
+      - ./Pizza-shop-order-backend/data:/app/data
+    restart: always
+
+  frontend:
+    build: ./Pizza-tracker-order-frontend
+    container_name: pizza_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always
