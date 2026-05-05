@@ -1,3 +1,4 @@
-sqlite3.exe
-*.db
-/template/static/temp_*
+# .gitignore del Backend
+*.exe
+data/*.db
+data/*.sqlite
