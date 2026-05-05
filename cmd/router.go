@@ -1,11 +1,19 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRouter(router *gin.Engine, h *Handler, store sessions.Store) {
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}))
+
 	router.Use(sessions.Sessions("pizza-tracker", store))
 	router.GET("/", h.ServeNewOrderForm)
 	router.POST("/new-order", h.HandleNewOrderPost)
